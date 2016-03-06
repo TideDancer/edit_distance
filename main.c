@@ -1,18 +1,22 @@
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define GAP 1
 #define MISMATCH 1
 #define MATCH 0
 
+int min(int a, int b)
+{ return a<b?a:b; }
+
 int main(int argc, char* argv[]) {
 
-  char* s1, s2, output_s, p;
-  int** M;
+  char *s1, *s2, *output_s, *p;
+  int **M;
   int len_s1,len_s2;
   int case1, case2, case3 = 0;
   int i,j=0;
-  
+ 
   if(argc != 3)
   	printf("Please Input 2 Sequences");
   else{
@@ -23,7 +27,7 @@ int main(int argc, char* argv[]) {
   len_s1 = strlen(s1);
   len_s2 = strlen(s2);	
 
-  M = (int**) malloc((len_s1+1)*sizeof(int*))
+  M = (int**) malloc((len_s1+1)*sizeof(int*));
   for(int i=0; i<=len_s1; i++)
     M[i] = (int*) malloc((len_s2+1)*sizeof(int));
 
@@ -48,7 +52,7 @@ int main(int argc, char* argv[]) {
 		M[i][j] = case1;
 	  }
   
-  print("The edit distance is %d \n",M[len_s1][len_s2];
+  printf("The edit distance is %d \n",M[len_s1][len_s2]);
 
   i = len_s1;
   j = len_s2;
@@ -57,40 +61,38 @@ int main(int argc, char* argv[]) {
 
   while(i>0 || j>0) 
   {
-    case1 = min(M[i-1][j], M[i,j-1]);
+    case1 = min(M[i-1][j], M[i][j-1]);
 	case1 = min(case1, M[i-1][j-1]);
-	switch(case1)
+	if(case1 == M[i-1][j-1])
 	{
-	  case M[i-1][j-1]:
 	    if(M[i-1][j-1] == M[i][j])
 		{ *p = '|'; p++; }
 		else
 		{ *p = '*'; p++; }
 		i--;
 		j--;
-		break;
-      case M[i-1][j]:
-        *p = "1";
-		i--;
-        break;
-      case M[i][j-1]:
-        *p = "2";
-		j--;
-        break;
-      default:
-        break;		
 	}
+    else if(case1 == M[i-1][j])
+	{
+        *p = '2'; p++;
+		i--;
+    }
+    else //case1 == M[i][j-1]
+	{
+        *p = '1'; p++;
+		j--;
+    }
   }
   while(i>0)
-  { *p = "1"; i--; }
+  { *p = '1'; p++; i--; }
   while(j>0)
-  { *p = "2"; j--; }
+  { *p = '2'; p++; j--; }
 
-  while(p != output_s)
+  while(p > output_s)
   {
-    printf("%s",*p);
+    printf("%c",*p);
 	p--;
   }
-  pritnf("%s\n",*p);
+  printf("%c\n",*p);
 
 }
